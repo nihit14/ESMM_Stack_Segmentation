@@ -24,6 +24,7 @@ For each chromosome beta file was converted to bed format using wgbstools. More 
 -   coverage: the total number of times i'th site (CpGi) is observed. #coverage==0 is equivalent to a missing value (NaN). CpGi beta value is obtained by dividing #meth /#coverage.
 
 Read all the files and then use divide for each chromosome
+
 ```{bash,eval=FALSE}
 cd /jmsh/external/nihit/Israeli_methylation_dataset/matrices
 ```
@@ -58,6 +59,7 @@ done
 
 ## Merge all CpG coordinates
 
+Here I am checking and extracting all the CpG coordinates covered across all samples. Finally for each chromosome a sorted bed file is created later this would be use to generate chromosome wise matrix.
 
 ```{bash,eval=FALSE}
 # Working directory 
@@ -82,10 +84,31 @@ do
 done
 ```
 
-## Merge all samples chromsome wise
-```{r}
+I decided to use bash and bedtools intersect for generating chromosome wise matrices for coverage and methylation as the matrix would be quite large to handle in R since even readr was quite slow.
+
+```{bash,eval=FALSE}
+# change to the files directory
+cd /jmsh/external/nihit/Israeli_methylation_dataset/matrices
+
+# activating the conda environment. Later would be needed would for bedtools intersect
+source /jmsh/projects/conda/minconda/bin/activate /jmsh/projects/conda/minconda/envs/bins14_core/
+
+for files in $(ls ../bed/*.hg38.bed)
+do 
+  i=$(expr $i + 1)
+  fname=$(basename $files .hg38.bed)
+  echo -e "Processing sample number: ${i} - ${fname}"
+  awk -v a="$fname" -vOFS="\t" '{print $1,$2,$3,$5,$4 > $1"/"a"_"$1".temp.bed"}' $files
+done
+```
+
+```{bash,eval=FALSE}
+
+## Merge all samples chromosome wise
+
 # load data.table 
 library(readr)
+library(dplyr)
 
 # set file paths
 setwd("/jmsh/projects/researchers/bins14/AG_Israel/Analysis/")
@@ -99,15 +122,15 @@ coordinate_file <- read_tsv(file = "/jmsh/external/nihit/Israeli_methylation_dat
 list_of_files <- list.files(folder, full.names = TRUE,pattern=".hg38.bed$")
 
 # reading all files 
-files = lapply(list_of_files[1],function(x){
-  sample_data <- read_tsv(x,col_names = FALSE)
+files = lapply(list_of_files[1:2],function(x){
+  sample_data <- read_tsv(x,col_names = FALSE,show_col_types = FALSE)
   sample_data <- sample_data[c(sample_data$X1==paste("chr",chromosome,sep = "")),]
-  sample_data <- subset(sample_data,select=c("X2","X4","X5")) 
+  sample_data <- subset(sample_data,select=c("X2")) 
 
   return(sample_data)
   })
 
-
+merged_df <- as.data.frame(do.call(cbind,files))
 
 ```
 
