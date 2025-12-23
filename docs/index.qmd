@@ -58,7 +58,10 @@ done
 
 ## Merge all CpG coordinates
 
+
 ```{bash,eval=FALSE}
+# Working directory 
+cd /jmsh/external/nihit/Israeli_methylation_dataset/matrices
 # cat over all chromosome folder, sort and use only uniq to get all coordinates of CpGs across samples 
 for chromosomes in $(ls c* -d )
 do 
@@ -70,12 +73,54 @@ do
 done
 
 # sort the coordinates for each chromosome in increasing bp
+for files in chr*txt
+do 
+  fname=$(basename $files .txt)
+  sort -k1,1n $files \
+  |awk -v a="$fname" -vOFS="\t" '{print a,$1,$1+2 }' \
+  > ${fname}_sorted.bed
+done
+```
+
+## Merge all samples chromsome wise
+```{r}
+# load data.table 
+library(readr)
+
+# set file paths
+setwd("/jmsh/projects/researchers/bins14/AG_Israel/Analysis/")
+folder="/jmsh/external/nihit/Israeli_methylation_dataset/bed/"
+chromosome="Y"
+
+coordinate_file <- read_tsv(file = "/jmsh/external/nihit/Israeli_methylation_dataset/matrices/chrY_sorted.bed",
+                            col_names = FALSE)
+
+
+list_of_files <- list.files(folder, full.names = TRUE,pattern=".hg38.bed$")
+
+# reading all files 
+files = lapply(list_of_files[1],function(x){
+  sample_data <- read_tsv(x,col_names = FALSE)
+  sample_data <- sample_data[c(sample_data$X1==paste("chr",chromosome,sep = "")),]
+  sample_data <- subset(sample_data,select=c("X2","X4","X5")) 
+
+  return(sample_data)
+  })
+
+
 
 ```
 
-```{r}
-#setwd("/jmsh/projects/researchers/bins14/AG_Israel/Analysis/")
-getwd()
+```{r,eval=FALSE}
+files = lapply(temp,function(x){read.table(gzfile(x),skip=1,as.is=FALSE)})
+d1 <- as.data.frame(rbindlist(files))
+colnames(d1) <- c("chr","start","end","segments","score","direction","start2","end2","color")
+names <- lapply(temp, function(x) {str <- basename(x); spl <- strsplit(str,"\\."); paste(spl[[1]][1:1],collapse="_")} )
+names.vector <- c()
+for(i in 1:length(names)){
+  names.vector <- c(names.vector,rep(names[[i]][1],length(files[[i]]$V1)))
+}
+
 ```
 
 You can add options to executable code like this

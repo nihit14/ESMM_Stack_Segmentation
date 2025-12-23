@@ -156,28 +156,96 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># cat over all chromosome folder, sort and use only uniq to get all coordinates of CpGs across samples </span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> chromosomes <span class="kw">in</span> <span class="va">$(</span><span class="fu">ls</span> c<span class="pp">*</span> <span class="at">-d</span> <span class="va">)</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="cf">do</span> </span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="bu">echo</span> <span class="va">$chromosomes</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cat</span> <span class="va">${chromosomes}</span>/<span class="pp">*</span>txt <span class="dt">\</span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="kw">|</span><span class="fu">sort</span> <span class="dt">\</span></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="kw">|</span><span class="fu">uniq</span> <span class="dt">\</span></span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  <span class="op">&gt;</span> <span class="va">${chromosomes}</span>.txt</span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="cf">done</span></span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="co"># sort the coordinates for each chromosome in increasing bp</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Working directory </span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> /jmsh/external/nihit/Israeli_methylation_dataset/matrices</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co"># cat over all chromosome folder, sort and use only uniq to get all coordinates of CpGs across samples </span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> chromosomes <span class="kw">in</span> <span class="va">$(</span><span class="fu">ls</span> c<span class="pp">*</span> <span class="at">-d</span> <span class="va">)</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="cf">do</span> </span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="bu">echo</span> <span class="va">$chromosomes</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cat</span> <span class="va">${chromosomes}</span>/<span class="pp">*</span>txt <span class="dt">\</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  <span class="kw">|</span><span class="fu">sort</span> <span class="dt">\</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>  <span class="kw">|</span><span class="fu">uniq</span> <span class="dt">\</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>  <span class="op">&gt;</span> <span class="va">${chromosomes}</span>.txt</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="cf">done</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="co"># sort the coordinates for each chromosome in increasing bp</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> files <span class="kw">in</span> chr<span class="pp">*</span>txt</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="cf">do</span> </span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>  <span class="va">fname</span><span class="op">=</span><span class="va">$(</span><span class="fu">basename</span> <span class="va">$files</span> .txt<span class="va">)</span></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sort</span> <span class="at">-k1,1n</span> <span class="va">$files</span> <span class="dt">\</span></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>  <span class="kw">|</span><span class="fu">awk</span> <span class="at">-v</span> a=<span class="st">"</span><span class="va">$fname</span><span class="st">"</span> <span class="at">-vOFS</span><span class="op">=</span><span class="st">"\t"</span> <span class="st">'{print a,$1,$1+2 }'</span> <span class="dt">\</span></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>  <span class="op">&gt;</span> <span class="va">${fname}</span>_sorted.bed</span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a><span class="cf">done</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
+</div>
+</section>
+<section id="merge-all-samples-chromsome-wise" class="level2">
+<h2 class="anchored" data-anchor-id="merge-all-samples-chromsome-wise">Merge all samples chromsome wise</h2>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># load data.table </span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'readr' was built under R version 4.4.3</code></pre>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># set file paths</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">setwd</span>(<span class="st">"/jmsh/projects/researchers/bins14/AG_Israel/Analysis/"</span>)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>folder<span class="ot">=</span><span class="st">"/jmsh/external/nihit/Israeli_methylation_dataset/bed/"</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>chromosome<span class="ot">=</span><span class="st">"Y"</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>coordinate_file <span class="ot">&lt;-</span> <span class="fu">read_tsv</span>(<span class="at">file =</span> <span class="st">"/jmsh/external/nihit/Israeli_methylation_dataset/matrices/chrY_sorted.bed"</span>,</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>                            <span class="at">col_names =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 225912 Columns: 3
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: "\t"
+chr (1): X1
+dbl (2): X2, X3
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>list_of_files <span class="ot">&lt;-</span> <span class="fu">list.files</span>(folder, <span class="at">full.names =</span> <span class="cn">TRUE</span>,<span class="at">pattern=</span><span class="st">".hg38.bed$"</span>)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="co"># reading all files </span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>files <span class="ot">=</span> <span class="fu">lapply</span>(list_of_files[<span class="dv">1</span>],<span class="cf">function</span>(x){</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  sample_data <span class="ot">&lt;-</span> <span class="fu">read_tsv</span>(x,<span class="at">col_names =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  sample_data <span class="ot">&lt;-</span> sample_data[<span class="fu">c</span>(sample_data<span class="sc">$</span>X1<span class="sc">==</span><span class="fu">paste</span>(<span class="st">"chr"</span>,chromosome,<span class="at">sep =</span> <span class="st">""</span>)),]</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>  sample_data <span class="ot">&lt;-</span> <span class="fu">subset</span>(sample_data,<span class="at">select=</span><span class="fu">c</span>(<span class="st">"X2"</span>,<span class="st">"X4"</span>,<span class="st">"X5"</span>)) </span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(sample_data)</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>  })</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 29401795 Columns: 5
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: "\t"
+chr (1): X1
+dbl (4): X2, X3, X4, X5
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
 </div>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">#setwd("/jmsh/projects/researchers/bins14/AG_Israel/Analysis/")</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">getwd</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>files <span class="ot">=</span> <span class="fu">lapply</span>(temp,<span class="cf">function</span>(x){<span class="fu">read.table</span>(<span class="fu">gzfile</span>(x),<span class="at">skip=</span><span class="dv">1</span>,<span class="at">as.is=</span><span class="cn">FALSE</span>)})</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>d1 <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(<span class="fu">rbindlist</span>(files))</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(d1) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"chr"</span>,<span class="st">"start"</span>,<span class="st">"end"</span>,<span class="st">"segments"</span>,<span class="st">"score"</span>,<span class="st">"direction"</span>,<span class="st">"start2"</span>,<span class="st">"end2"</span>,<span class="st">"color"</span>)</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>names <span class="ot">&lt;-</span> <span class="fu">lapply</span>(temp, <span class="cf">function</span>(x) {str <span class="ot">&lt;-</span> <span class="fu">basename</span>(x); spl <span class="ot">&lt;-</span> <span class="fu">strsplit</span>(str,<span class="st">"</span><span class="sc">\\</span><span class="st">."</span>); <span class="fu">paste</span>(spl[[<span class="dv">1</span>]][<span class="dv">1</span><span class="sc">:</span><span class="dv">1</span>],<span class="at">collapse=</span><span class="st">"_"</span>)} )</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>names.vector <span class="ot">&lt;-</span> <span class="fu">c</span>()</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(names)){</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>  names.vector <span class="ot">&lt;-</span> <span class="fu">c</span>(names.vector,<span class="fu">rep</span>(names[[i]][<span class="dv">1</span>],<span class="fu">length</span>(files[[i]]<span class="sc">$</span>V1)))</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] "/jmsh/projects/researchers/bins14/AG_Israel/src/docs"</code></pre>
-</div>
 </div>
 <p>You can add options to executable code like this</p>
 <div class="cell">
