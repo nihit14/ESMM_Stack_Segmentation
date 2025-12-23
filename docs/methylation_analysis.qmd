@@ -5,9 +5,8 @@ format:
   html:
     code-fold: true
 project:
-  type: default
-  execute-dir: file
-  output-dir: /jmsh/projects/researchers/bins14/AG_Israel/src/
+  type: website
+  output-dir: docs
 ---
 
 # Aim
