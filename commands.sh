@@ -17,4 +17,9 @@ for files in $(ls ../bed/*bed |grep -v counts ); do fname=$(basename $files .hg3
 # above command was cancelled as I could think of efficient way to get all coordinates across files I simply need to extract chromosome wise second column from each file and this can be used as the coordinate # Adapted command only print $2
 for files in $(ls ../bed/*bed |grep -v counts ); do fname=$(basename $files .hg38.bed);awk -v a="$fname" -vOFS="\t" '{print $2 > $1"/"a"_"$1".txt"}' $files ;done
 
+# Then cat all txt files chromosome wise |sort them and find uniq entries.  
+for chromosomes in $(ls c* -d ) ;do echo $chromosomes;cat ${chromosomes}/*txt |sort |uniq > ${chromosomes}.txt  ;done
 
+
+# create proper bedfile for the all CpG coordinates
+for files in chr*txt ; do fname=$(basename $files .txt); sort -k1,1n $files |awk -v a="$fname" -vOFS="\t" '{print a,$1,$1+2 }' > ${fname}_sorted.bed  ;done
