@@ -232,20 +232,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </details>
 </div>
 <div class="cell">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>files <span class="ot">=</span> <span class="fu">lapply</span>(temp,<span class="cf">function</span>(x){<span class="fu">read.table</span>(<span class="fu">gzfile</span>(x),<span class="at">skip=</span><span class="dv">1</span>,<span class="at">as.is=</span><span class="cn">FALSE</span>)})</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>d1 <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(<span class="fu">rbindlist</span>(files))</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(d1) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"chr"</span>,<span class="st">"start"</span>,<span class="st">"end"</span>,<span class="st">"segments"</span>,<span class="st">"score"</span>,<span class="st">"direction"</span>,<span class="st">"start2"</span>,<span class="st">"end2"</span>,<span class="st">"color"</span>)</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>names <span class="ot">&lt;-</span> <span class="fu">lapply</span>(temp, <span class="cf">function</span>(x) {str <span class="ot">&lt;-</span> <span class="fu">basename</span>(x); spl <span class="ot">&lt;-</span> <span class="fu">strsplit</span>(str,<span class="st">"</span><span class="sc">\\</span><span class="st">."</span>); <span class="fu">paste</span>(spl[[<span class="dv">1</span>]][<span class="dv">1</span><span class="sc">:</span><span class="dv">1</span>],<span class="at">collapse=</span><span class="st">"_"</span>)} )</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>names.vector <span class="ot">&lt;-</span> <span class="fu">c</span>()</span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(names)){</span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  names.vector <span class="ot">&lt;-</span> <span class="fu">c</span>(names.vector,<span class="fu">rep</span>(names[[i]][<span class="dv">1</span>],<span class="fu">length</span>(files[[i]]<span class="sc">$</span>V1)))</span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-</div>
-<p>You can add options to executable code like this</p>
-<div class="cell">
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 4</code></pre>
 </div>

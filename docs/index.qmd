@@ -131,22 +131,7 @@ files = lapply(list_of_files[1:2],function(x){
   })
 
 merged_df <- as.data.frame(do.call(cbind,files))
-
 ```
-
-```{r,eval=FALSE}
-files = lapply(temp,function(x){read.table(gzfile(x),skip=1,as.is=FALSE)})
-d1 <- as.data.frame(rbindlist(files))
-colnames(d1) <- c("chr","start","end","segments","score","direction","start2","end2","color")
-names <- lapply(temp, function(x) {str <- basename(x); spl <- strsplit(str,"\\."); paste(spl[[1]][1:1],collapse="_")} )
-names.vector <- c()
-for(i in 1:length(names)){
-  names.vector <- c(names.vector,rep(names[[i]][1],length(files[[i]]$V1)))
-}
-
-```
-
-You can add options to executable code like this
 
 ```{r}
 #| echo: false

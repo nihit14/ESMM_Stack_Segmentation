@@ -23,3 +23,11 @@ for chromosomes in $(ls c* -d ) ;do echo $chromosomes;cat ${chromosomes}/*txt |s
 
 # create proper bedfile for the all CpG coordinates
 for files in chr*txt ; do fname=$(basename $files .txt); sort -k1,1n $files |awk -v a="$fname" -vOFS="\t" '{print a,$1,$1+2 }' > ${fname}_sorted.bed  ;done
+
+
+# smoothing of all samples for 200 and 1000 bp 
+ls /jmsh/external/nihit/Israeli_methylation_dataset/bed/*.hg38.bed |nl |awk -vOFS="\t" 'BEGIN{print "ArrayTaskID\tSample\tSmoothing_window"}{print $0,200}' > config_smoothing.txt
+
+ls /jmsh/external/nihit/Israeli_methylation_dataset/bed/*.hg38.bed |awk -vOFS="\t" 'BEGIN{i=253}{i+=1;print i,$0,1000}' >> config_smoothing.txt
+
+# First only run for 200bp
