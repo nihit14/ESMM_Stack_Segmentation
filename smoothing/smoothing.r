@@ -19,8 +19,8 @@ methylation <-as.matrix(data[4]) # Since converted from the beta file using wgbs
 
 
 # colnames for current version has to be set to NULL
-colnames(methylation) <- NULL
-colnames(coverage) <- NULL
+colnames(methylation) <- "bs"
+colnames(coverage) <- "bs"
 
 # create bsseq object
 BS_methyl_smooth <- BSseq(M=methylation, Cov=coverage, pos= position, chr=chromosome) 
@@ -28,9 +28,9 @@ BS_methyl_smooth <- BSseq(M=methylation, Cov=coverage, pos= position, chr=chromo
 # conditional ns value based on smoothing window 
 
 if (smoothing == 1000) {
-    nCpGs=70
+    nCpGs=as.integer(70)
 } else if (smoothing ==  200) {
-    nCpGs=25
+    nCpGs=as.integer(25)
 } else {
     nCpGs=50
 }

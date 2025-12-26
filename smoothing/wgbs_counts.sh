@@ -2,7 +2,7 @@
 binsize=200
 shift_bp=75
 paired_end=ignore
-cores=125
+cores=100
 smoothing_window=1000 # ? change according to research questions (LMR ~ 200bp (n=25) PMDs 1000bp (n=75))
 
 while getopts ":hi:f:o:b:" OPTION

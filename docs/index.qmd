@@ -102,6 +102,22 @@ do
 done
 ```
 
+###### To Dos
+
+-   Do bedtools intersect command on above files chromosome wise. First save the name of the bed files in a variable and then use
+
+    `bedtools intersect -a coordinates.bed -b ${all_bed_chr_files}`
+
+-   merge all the matrices
+
+-   Smoothing
+
+    -   200 bp
+
+    -   1000 bp
+
+-   Once smoothing finishes do the merging of matrix again
+
 ```{bash,eval=FALSE}
 
 ## Merge all samples chromosome wise

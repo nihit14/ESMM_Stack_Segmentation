@@ -3,7 +3,7 @@
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=100
 #SBATCH --array=1-506%4
-#SBATCH --mem=256G
+#SBATCH --mem=500G
 #SBATCH --output=/jmsh/projects/researchers/bins14/slurm_logs/smoothing/smoothing_%A_%a.out
 #SBATCH --error=/jmsh/projects/researchers/bins14/slurm_logs/smoothing/smoothing_%A_%a.err
 

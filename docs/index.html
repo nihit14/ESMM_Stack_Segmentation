@@ -198,6 +198,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="cf">done</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
+<section id="to-dos" class="level6">
+<h6 class="anchored" data-anchor-id="to-dos">To Dos</h6>
+<ul>
+<li><p>Do bedtools intersect command on above files chromosome wise. First save the name of the bed files in a variable and then use</p>
+<p><code>bedtools intersect -a coordinates.bed -b ${all_bed_chr_files}</code></p></li>
+<li><p>merge all the matrices</p></li>
+<li><p>Smoothing</p>
+<ul>
+<li><p>200 bp</p></li>
+<li><p>1000 bp</p></li>
+</ul></li>
+<li><p>Once smoothing finishes do the merging of matrix again</p></li>
+</ul>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
@@ -237,6 +250,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>The <code>echo: false</code> option disables the printing of code (only output is displayed).</p>
+</section>
 </section>
 </section>
 
