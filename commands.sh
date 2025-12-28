@@ -92,3 +92,22 @@ do
     done < files_bed.txt
     echo -e "Finished chromosome ${chromosomes}."     
 done > loop.log 2>&1
+
+
+# Now we remove (chr) for the raw matrix from all chromosomes and store all the matrix in organised folder where it is only read rights with metadata
+# create header for file 
+header=$(for seq in $(seq 1 253); do echo -e 'Cov\tMeth' ;done |tr '\n' '\t')
+
+# mkdir 
+mkdir /jmsh/external/nihit/Israeli_methylation_dataset/matrices/{raw,smooth_200bp,smooth_1000bp}
+
+# remove chr for raw matrix and store them in right folder 
+cd /jmsh/external/nihit/Israeli_methylation_dataset/matrices
+for files in $(ls *sorted_final.txt)
+do 
+    fname=$(basename $files _sorted_final.txt)
+    echo $fname
+    awk -vOFS="\t" -v a="${header}" 'BEGIN{print "chr\tstart\tend",a}{gsub(/chr/,"");print $0}' $files \
+    |sed 's/\t$//'  \
+    > raw/${fname}.txt
+done
