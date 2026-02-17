@@ -111,3 +111,16 @@ do
     |sed 's/\t$//'  \
     > raw/${fname}.txt
 done
+
+
+# creating methlyation ratio matrices 
+cd /jmsh/external/nihit/Israeli_methylation_dataset/matrices
+# for each chromosome find the corresponding chr file and make a methylation ratio 
+for files in $(ls */chr*txt |grep -v old) ; do echo -e "Processing ${files}" ;awk -vOFS="\t" '{printf "%s%s%s", $1,OFS,$2; printf OFS $3; for(i=4;i<NF;i+=2) printf OFS int(($(i)==0)?0:($(i+1)/$i)*100); printf ORS}' $files > ../methylation_matrices/${files} ;done
+
+# concatenate each file to get complete matrix
+cat  ../methylation_matrices/smooth_1000bp/chr*txt |grep -v nan > ../methylation_matrices/temp.txt && mv ../methylation_matrices/temp.txt ../methylation_matrices/raw_methylation_matrix.txt
+
+# extract header and add the header to the main file 
+header=$(cat ../methylation_matrices/column_header.txt |cut -f 1 -d '_' |tr '\n' '\t')
+awk -vOFS="\t" -v a="$header" 'BEGIN{sub(/\t$/, "", a); print a}{print $0}' ../methylation_matrices/methylation_matrix_smooth-1000bp.txt  > ../methylation_matrices/temp.txt && mv ../methylation_matrices/temp.txt ../methylation_matrices/methylation_matrix_smooth-1000bp.txt
